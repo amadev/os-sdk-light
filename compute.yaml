@@ -1,0 +1,31 @@
+---
+  swagger: "2.0"
+  info:
+    version: "2.1"
+    title: "Compute API"
+    description: "https://developer.openstack.org/api-ref/compute/"
+  host: "172.18.237.203"
+  basePath: "/compute/v2.1/"
+  schemes:
+    - "http"
+  paths:
+    /flavors:
+      get:
+        operationId: "list"
+        description: "Lists all flavors accessible to your project."
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              properties:
+                flavors:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                    additionalProperties: true
