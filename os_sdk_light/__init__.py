@@ -9,7 +9,8 @@ from six.moves.urllib import parse as urlparse
 
 
 log = logging.getLogger(__name__)
-dir_path = os.path.dirname(os.path.realpath(__file__))
+schemas = os.path.dirname(
+    os.path.dirname(os.path.realpath(__file__))) + '/schemas'
 
 
 def get_client(cloud, service, schema):
@@ -25,7 +26,7 @@ def get_client(cloud, service, schema):
         url.hostname, access_info.auth_token,
         param_name='x-auth-token', param_in='header'
     )
-    spec = yaml.safe_load(open('%s/%s' % (dir_path, schema)))
+    spec = yaml.safe_load(open('%s/%s' % (schemas, schema)))
     spec['host'] = url.hostname
     spec['basePath'] = url.path
     spec['schemes'] = [url.scheme]
@@ -37,8 +38,3 @@ def get_client(cloud, service, schema):
         http_client=http_client,
         config=config)
     return client
-
-
-compute_client = get_client('devstack', 'compute', 'compute.yaml')
-for f in compute_client.flavors.list().response().result['flavors']:
-    print(f['id'], f['name'])
