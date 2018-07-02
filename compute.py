@@ -1,5 +1,6 @@
 import os
 import logging
+import yaml
 
 import os_client_config
 from bravado.client import SwaggerClient
@@ -8,33 +9,36 @@ from six.moves.urllib import parse as urlparse
 
 
 log = logging.getLogger(__name__)
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
-def get_http_client(cloud_name, service_name):
+def get_client(cloud, service, schema):
     config = os_client_config.OpenStackConfig()
-    cloud = config.get_one_cloud(cloud_name)
-    adapter = cloud.get_session_client(service_name)
+    cloud = config.get_one_cloud(cloud)
+    adapter = cloud.get_session_client(service)
     access_info = adapter.session.auth.get_access(adapter.session)
     endpoints = access_info.service_catalog.get_endpoints()
     http_client = RequestsClient()
-    host = urlparse.urlsplit(endpoints[service_name][0]['url']).hostname
+    endpoint = [e for e in endpoints[service] if e['interface'] == 'public'][0]
+    url = urlparse.urlsplit(endpoint['url'])
     http_client.set_api_key(
-        host, access_info.auth_token,
+        url.hostname, access_info.auth_token,
         param_name='x-auth-token', param_in='header'
     )
-    return http_client
+    spec = yaml.safe_load(open('%s/%s' % (dir_path, schema)))
+    spec['host'] = url.hostname
+    spec['basePath'] = url.path
+    spec['schemes'] = [url.scheme]
+    config = {
+        'also_return_response': True
+    }
+    client = SwaggerClient.from_spec(
+        spec,
+        http_client=http_client,
+        config=config)
+    return client
 
 
-compute_http_client = get_http_client('devstack', 'compute')
-dir_path = os.path.dirname(os.path.realpath(__file__))
-config = {
-    'also_return_response': True
-}
-compute_client = SwaggerClient.from_url(
-    'file://%s/compute.yaml' % dir_path ,
-    http_client=compute_http_client,
-    config=config
-)
-
+compute_client = get_client('devstack', 'compute', 'compute.yaml')
 for f in compute_client.flavors.list().response().result['flavors']:
-    print f['id'], f['name']
+    print(f['id'], f['name'])
