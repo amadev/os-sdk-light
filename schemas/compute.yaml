@@ -4,12 +4,12 @@
     version: "2.1"
     title: "Compute API"
     description: "https://developer.openstack.org/api-ref/compute/"
-  host: "fake_host"
-  basePath: "/fake_path"
+  host: "localhost"
+  basePath: "/"
   paths:
     /flavors/detail:
       get:
-        operationId: "list"
+        operationId: "list_flavors"
         description: "Lists all flavors accessible to your project."
         responses:
           "200":
@@ -23,7 +23,7 @@
                     $ref: "#/definitions/Flavor"
     /flavors:
       post:
-        operationId: "create"
+        operationId: "create_flavor"
         description: "Creates a flavor."
         parameters:
           - in: body
@@ -38,7 +38,7 @@
               $ref: "#/definitions/FlavorWrapper"
     /flavors/{flavor_id}:
       get:
-        operationId: "get"
+        operationId: "get_flavor"
         description: "Show Flavor Details."
         parameters:
           - in: path
@@ -51,7 +51,7 @@
             schema:
               $ref: "#/definitions/FlavorWrapper"
       delete:
-        operationId: "delete"
+        operationId: "delete_flavor"
         description: "Deletes a flavor."
         parameters:
           - in: path
@@ -60,6 +60,66 @@
             type: string
         responses:
           "202":
+            description: OK
+
+    /servers/detail:
+      get:
+        operationId: "list_servers"
+        description: "Lists all servers accessible to your project."
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              properties:
+                servers:
+                  type: array
+                  items:
+                    $ref: "#/definitions/Server"
+    /servers:
+      post:
+        operationId: "create_server"
+        description: "Creates a server."
+        parameters:
+          - in: body
+            name: server
+            required: true
+            schema:
+              $ref: "#/definitions/ServerWrapper"
+        responses:
+          "202":
+            description: OK
+            schema:
+              type: object
+              required:
+                - server
+              properties:
+                server:
+                  type: object
+    /servers/{server_id}:
+      get:
+        operationId: "get_server"
+        description: "Show Server Details."
+        parameters:
+          - in: path
+            name: server_id
+            required: true
+            type: string
+        responses:
+          "200":
+            description: OK
+            schema:
+              $ref: "#/definitions/ServerWrapper"
+      delete:
+        operationId: "delete_server"
+        description: "Deletes a server."
+        parameters:
+          - in: path
+            name: server_id
+            required: true
+            type: string
+        responses:
+          "204":
             description: OK
 
   definitions:
@@ -85,3 +145,27 @@
       properties:
         flavor:
           $ref: "#/definitions/Flavor"
+    Server:
+      type: object
+      required:
+        - name
+        - imageRef
+        - flavorRef
+        - networks
+      properties:
+        name:
+          type: string
+        imageRef:
+          type: string
+        flavorRef:
+          type: string
+        networks:
+          type: array
+          items:
+            type: object
+      additionalProperties: true
+    ServerWrapper:
+      type: object
+      properties:
+        server:
+          $ref: "#/definitions/Server"
