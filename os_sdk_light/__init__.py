@@ -9,8 +9,12 @@ from six.moves.urllib import parse as urlparse
 
 
 log = logging.getLogger(__name__)
-schemas = os.path.dirname(
-    os.path.dirname(os.path.realpath(__file__))) + '/schemas'
+SCHEMAS = os.path.dirname(
+    os.path.dirname(os.path.realpath(__file__))) + '/schemas/'
+
+
+def schema(name):
+    return SCHEMAS + name
 
 
 def get_client(cloud, service, schema):
@@ -26,7 +30,7 @@ def get_client(cloud, service, schema):
         url.hostname, access_info.auth_token,
         param_name='x-auth-token', param_in='header'
     )
-    spec = yaml.safe_load(open('%s/%s' % (schemas, schema)))
+    spec = yaml.safe_load(open(schema))
     spec['host'] = url.hostname
     spec['basePath'] = url.path
     spec['schemes'] = [url.scheme]

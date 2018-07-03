@@ -1,7 +1,8 @@
-from os_sdk_light import get_client
+import os_sdk_light as osl
 
 
-compute_client = get_client('devstack', 'compute', 'compute.yaml')
+compute_client = osl.get_client(
+    'devstack', 'compute', osl.schema('compute.yaml'))
 
 
 def test_list_flavors():
