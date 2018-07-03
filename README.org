@@ -1,0 +1,31 @@
+* OpenStack SDK Light
+
+The goal of this project is to have Rest API client for OpenStack with
+as least additional code overhead as possible.
+
+Basically, it is os-client-config [1] + bravado swagger client [2],
+almost the same as openstacksdk [3], but with yaml schema definition
+instead of code.
+
+Example:
+
+1. git clone <openstack sdk light>
+2. update clouds.yaml
+3. explore/update schemas
+4. run code
+
+#+BEGIN_SRC python
+import os_sdk_light as osl
+
+
+compute_client = osl.get_client(
+    cloud='devstack',
+    service='compute',
+    schema=osl.schema('compute.yaml'))
+
+flavors = compute_client.flavors.list().response().result['flavors']
+#+END_SRC
+
+- [1] https://docs.openstack.org/os-client-config/latest/
+- [2] https://github.com/Yelp/bravado
+- [3] https://github.com/openstack/openstacksdk
