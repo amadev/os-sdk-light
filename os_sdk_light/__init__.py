@@ -31,7 +31,8 @@ def get_client(cloud, service, schema):
         param_name='x-auth-token', param_in='header'
     )
     spec = yaml.safe_load(open(schema))
-    spec['host'] = url.hostname
+    spec['host'] = url.hostname if not url.port else '%s:%s' % (
+        url.hostname, url.port)
     path = url.path[:-1] if url.path[-1] == '/' else url.path
     spec['basePath'] = path + spec['basePath']
     spec['schemes'] = [url.scheme]

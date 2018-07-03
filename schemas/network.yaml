@@ -1,0 +1,25 @@
+---
+  swagger: "2.0"
+  info:
+    version: "2"
+    title: "Network API"
+    description: "https://developer.openstack.org/api-ref/network/v2/"
+  host: "localhost"
+  basePath: "/v2.0"
+  paths:
+    /networks:
+      get:
+        operationId: "list"
+        description: "List networks."
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              required:
+                - networks
+              properties:
+                networks:
+                  type: array
+                  items:
+                    type: object
