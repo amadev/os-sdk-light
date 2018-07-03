@@ -7,7 +7,7 @@
   host: "fake_host"
   basePath: "/fake_path"
   paths:
-    /flavors:
+    /flavors/detail:
       get:
         operationId: "list"
         description: "Lists all flavors accessible to your project."
@@ -20,10 +20,68 @@
                 flavors:
                   type: array
                   items:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                      name:
-                        type: string
-                    additionalProperties: true
+                    $ref: "#/definitions/Flavor"
+    /flavors:
+      post:
+        operationId: "create"
+        description: "Creates a flavor."
+        parameters:
+          - in: body
+            name: flavor
+            required: true
+            schema:
+              $ref: "#/definitions/FlavorWrapper"
+        responses:
+          "200":
+            description: OK
+            schema:
+              $ref: "#/definitions/FlavorWrapper"
+    /flavors/{flavor_id}:
+      get:
+        operationId: "get"
+        description: "Show Flavor Details."
+        parameters:
+          - in: path
+            name: flavor_id
+            required: true
+            type: string
+        responses:
+          "200":
+            description: OK
+            schema:
+              $ref: "#/definitions/FlavorWrapper"
+      delete:
+        operationId: "delete"
+        description: "Deletes a flavor."
+        parameters:
+          - in: path
+            name: flavor_id
+            required: true
+            type: string
+        responses:
+          "202":
+            description: OK
+
+  definitions:
+    Flavor:
+      type: object
+      required:
+        - name
+        - ram
+        - disk
+        - vcpus
+      properties:
+        name:
+          type: string
+        ram:
+          type: integer
+        disk:
+          type: integer
+        vcpus:
+          type: integer
+      additionalProperties: true
+    FlavorWrapper:
+      type: object
+      properties:
+        flavor:
+          $ref: "#/definitions/Flavor"
