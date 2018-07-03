@@ -1,0 +1,25 @@
+---
+  swagger: "2.0"
+  info:
+    version: "2"
+    title: "Image API"
+    description: "https://developer.openstack.org/api-ref/image/v2/"
+  host: "localhost"
+  basePath: "/v2/"
+  paths:
+    /images:
+      get:
+        operationId: "list"
+        description: "List images."
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              required:
+                - images
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: object

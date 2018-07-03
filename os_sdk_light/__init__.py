@@ -32,7 +32,8 @@ def get_client(cloud, service, schema):
     )
     spec = yaml.safe_load(open(schema))
     spec['host'] = url.hostname
-    spec['basePath'] = url.path
+    path = url.path[:-1] if url.path[-1] == '/' else url.path
+    spec['basePath'] = path + spec['basePath']
     spec['schemes'] = [url.scheme]
     config = {
         'also_return_response': True
