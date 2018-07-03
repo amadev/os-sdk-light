@@ -9,8 +9,7 @@ from six.moves.urllib import parse as urlparse
 
 
 log = logging.getLogger(__name__)
-SCHEMAS = os.path.dirname(
-    os.path.dirname(os.path.realpath(__file__))) + '/schemas/'
+SCHEMAS = os.path.dirname(os.path.realpath(__file__)) + '/schemas/'
 
 
 def schema(name):
