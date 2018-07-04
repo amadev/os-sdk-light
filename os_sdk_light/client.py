@@ -3,7 +3,7 @@ import logging
 import yaml
 
 import os_client_config
-from bravado.client import SwaggerClient
+from bravado.client import SwaggerClient, CallableOperation, ResourceDecorator
 from bravado.requests_client import RequestsClient
 from swagger_spec_validator.common import SwaggerValidationError
 from six.moves.urllib import parse as urlparse
@@ -13,6 +13,37 @@ from os_sdk_light import exceptions
 
 LOG = logging.getLogger(__name__)
 SCHEMAS = os.path.dirname(os.path.realpath(__file__)) + '/schemas/'
+
+
+class OSLCallableOperation(CallableOperation):
+    def __call__(self, **op_kwargs):
+        return super(OSLCallableOperation, self).__call__(
+            **op_kwargs).response().result
+
+
+class OSLResourceDecorator(ResourceDecorator):
+    def __getattr__(self, name):
+        """
+        :rtype: :class:`CallableOperation`
+        """
+        return OSLCallableOperation(getattr(self.resource, name), False)
+
+
+class OSLSwaggerClient(SwaggerClient):
+    def _get_resource(self, item):
+        """
+        :param item: name of the resource to return
+        :return: :class:`Resource`
+        """
+        resource = self.swagger_spec.resources.get(item)
+        if not resource:
+            raise AttributeError(
+                'Resource {0} not found. Available resources: {1}'
+                .format(item, ', '.join(dir(self))))
+
+        # Wrap bravado-core's Resource and Operation objects in order to
+        # execute a service call via the http_client.
+        return OSLResourceDecorator(resource, False)
 
 
 def schema(name):
@@ -74,7 +105,7 @@ def get_client(cloud, service, schema, config={}):
         url.hostname, access_info.auth_token,
         param_name='x-auth-token', param_in='header'
     )
-    client = SwaggerClient.from_spec(
+    client = OSLSwaggerClient.from_spec(
         spec,
         http_client=http_client,
         config=config)
