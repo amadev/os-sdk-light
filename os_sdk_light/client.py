@@ -5,6 +5,7 @@ import yaml
 import os_client_config
 from bravado.client import SwaggerClient
 from bravado.requests_client import RequestsClient
+from swagger_spec_validator.common import SwaggerValidationError
 from six.moves.urllib import parse as urlparse
 import keystoneauth1.exceptions as ka_excs
 from os_sdk_light import exceptions
@@ -49,23 +50,30 @@ def get_client(cloud, service, schema, config={}):
             'Try to check service exists in service catalog.'
             % (service, interface))
         raise exceptions.CannotConnectToCloud(
-            'Failed failed to find service endpoint')
+            'Failed to find service endpoint')
+    try:
+        with open(schema) as f:
+            spec = yaml.safe_load(f)
+            SwaggerClient.from_spec(spec)
+    except (IOError, ValueError, SwaggerValidationError):
+        LOG.exception(
+            'Schema file %s cannot be read or incorrect. '
+            'Please check file exists, accessible '
+            'and satisfies swagger 2.0 specification.')
+        raise exceptions.SchemaError('Schema file cannot be read or invalid')
+    url = urlparse.urlsplit(endpoint['url'])
+    spec['host'] = url.netloc
+    path = url.path[:-1] if url.path.endswith('/') else url.path
+    spec['basePath'] = path + spec['basePath']
+    spec['schemes'] = [url.scheme]
+    LOG.debug('Got swagger server configuration for service %s: %s%s',
+              service, spec['host'], spec['basePath'])
 
     http_client = RequestsClient()
-    url = urlparse.urlsplit(endpoint['url'])
     http_client.set_api_key(
         url.hostname, access_info.auth_token,
         param_name='x-auth-token', param_in='header'
     )
-    spec = yaml.safe_load(open(schema))
-    spec['host'] = url.hostname if not url.port else '%s:%s' % (
-        url.hostname, url.port)
-    path = url.path[:-1] if url.path[-1] == '/' else url.path
-    spec['basePath'] = path + spec['basePath']
-    spec['schemes'] = [url.scheme]
-    config = {
-        'also_return_response': True
-    }
     client = SwaggerClient.from_spec(
         spec,
         http_client=http_client,
