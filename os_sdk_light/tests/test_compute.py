@@ -22,8 +22,8 @@ def test_list_flavors():
 
 
 def test_create_flavor():
-    pytest.raises(exception.SwaggerMappingError,
-                  lambda: compute_client.flavors.create_flavor())
+    with pytest.raises(osl.exceptions.ValidationError):
+        compute_client.flavors.create_flavor()
     flavor = compute_client.flavors.create_flavor(
         flavor={'flavor': {'name': TEST_FLAVOR,
                            'ram': 16384,

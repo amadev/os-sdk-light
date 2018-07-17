@@ -1,8 +1,9 @@
 import os
-import pytest
-import os_sdk_light as osl
 import tempfile
+import mock
+import pytest
 import yaml
+import os_sdk_light as osl
 
 
 @pytest.fixture
@@ -66,3 +67,29 @@ def test_incorrect_schema():
             osl.exceptions.SchemaError,
             match='cannot be read or invalid'):
         osl.get_client('devstack', 'compute', f.name)
+
+
+def test_request_does_not_match_schema():
+    compute = osl.get_client('devstack', 'compute', osl.schema('compute.yaml'))
+    with pytest.raises(
+            osl.exceptions.ValidationError,
+            match='required parameter'):
+        compute.flavors.create_flavor()
+    with pytest.raises(
+            osl.exceptions.ValidationError,
+            match='required property'):
+        compute.flavors.create_flavor(flavor={'flavor': {'name': 'test'}})
+
+
+def test_response_does_not_match_schema():
+    compute = osl.get_client('devstack', 'compute', osl.schema('compute.yaml'))
+    with mock.patch(
+            'bravado.requests_client.RequestsResponseAdapter') as resp_class:
+        resp = mock.MagicMock()
+        resp.status_code = 200
+        resp.json.return_value = {}
+        resp_class.return_value = resp
+        with pytest.raises(
+                osl.exceptions.ValidationError,
+                match='required property'):
+            compute.flavors.get_flavor(flavor_id='fake')

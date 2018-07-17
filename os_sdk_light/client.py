@@ -1,13 +1,17 @@
+import sys
+import six
 import os
 import logging
 import yaml
-
+import keystoneauth1.exceptions as ka_excs
+import jsonschema.exceptions
 import os_client_config
+
+from six.moves.urllib import parse as urlparse
 from bravado.client import SwaggerClient, CallableOperation, ResourceDecorator
 from bravado.requests_client import RequestsClient
 from swagger_spec_validator.common import SwaggerValidationError
-from six.moves.urllib import parse as urlparse
-import keystoneauth1.exceptions as ka_excs
+from bravado_core.exception import SwaggerMappingError
 from os_sdk_light import exceptions
 
 
@@ -17,8 +21,14 @@ SCHEMAS = os.path.dirname(os.path.realpath(__file__)) + '/schemas/'
 
 class OSLCallableOperation(CallableOperation):
     def __call__(self, **op_kwargs):
-        return super(OSLCallableOperation, self).__call__(
-            **op_kwargs).response().result
+        try:
+            return super(OSLCallableOperation, self).__call__(
+                **op_kwargs).response().result
+        except (SwaggerMappingError,
+                jsonschema.exceptions.ValidationError) as e:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            raise six.reraise(
+                exceptions.ValidationError, exc_value, exc_traceback)
 
 
 class OSLResourceDecorator(ResourceDecorator):

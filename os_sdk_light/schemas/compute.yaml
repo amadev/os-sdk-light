@@ -142,6 +142,8 @@
       additionalProperties: true
     FlavorWrapper:
       type: object
+      required:
+        - flavor
       properties:
         flavor:
           $ref: "#/definitions/Flavor"
@@ -166,6 +168,8 @@
       additionalProperties: true
     ServerWrapper:
       type: object
+      required:
+        - server
       properties:
         server:
           $ref: "#/definitions/Server"

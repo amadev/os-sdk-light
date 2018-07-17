@@ -1,14 +1,14 @@
-class BaseOSLException(Exception):
+class BaseException(Exception):
     pass
 
 
-class CannotConnectToCloud(BaseOSLException):
+class CannotConnectToCloud(BaseException):
     pass
 
 
-class SchemaError(BaseOSLException):
+class SchemaError(BaseException):
     pass
 
 
-class OSLValidationError(BaseOSLException):
+class ValidationError(BaseException):
     pass
