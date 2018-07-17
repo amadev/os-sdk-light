@@ -28,7 +28,9 @@ class OSLCallableOperation(CallableOperation):
                 jsonschema.exceptions.ValidationError) as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             raise six.reraise(
-                exceptions.ValidationError, exc_value, exc_traceback)
+                exceptions.ValidationError,
+                exceptions.ValidationError(e),
+                exc_traceback)
 
 
 class OSLResourceDecorator(ResourceDecorator):

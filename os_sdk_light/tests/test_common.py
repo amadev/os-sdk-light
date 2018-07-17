@@ -21,7 +21,7 @@ def test_no_cloud_config(change_dir):
 
 
 def test_invalid_auth_params():
-    f = tempfile.NamedTemporaryFile()
+    f = tempfile.NamedTemporaryFile(mode='w')
     data = yaml.load(open('clouds.yaml'))
     data['clouds']['devstack']['auth']['password'] = 'fake'
     yaml.dump(data, f)
@@ -32,7 +32,7 @@ def test_invalid_auth_params():
 
 
 def test_incorrect_auth_schema():
-    f = tempfile.NamedTemporaryFile()
+    f = tempfile.NamedTemporaryFile(mode='w')
     data = yaml.load(open('clouds.yaml'))
     del data['clouds']['devstack']['auth']['password']
     yaml.dump(data, f)
@@ -43,7 +43,7 @@ def test_incorrect_auth_schema():
 
 
 def test_empty_auth_schema():
-    f = tempfile.NamedTemporaryFile()
+    f = tempfile.NamedTemporaryFile(mode='w')
     data = yaml.load(open('clouds.yaml'))
     del data['clouds']['devstack']['auth']['password']
     del data['clouds']['devstack']['auth']['username']
