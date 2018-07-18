@@ -8,7 +8,7 @@ setup(
     # metadata for upload to PyPI
     author="Andrey Volkov",
     author_email="amadev@mail.ru",
-    description="Simple library for analytics",
+    description="Lightweight OpenStack client with schema based approach",
     license="MIT",
     keywords="openstack client swagger openapi",
     url="https://github.com/amadev/os-sdk-light",
@@ -23,9 +23,10 @@ setup(
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: MIT License',
         'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Topic :: Software Development :: Libraries',
         'Topic :: Utilities',
-        'Topic :: Scientific/Engineering :: Information Analysis',
     ],
     include_package_data=True,
 )
