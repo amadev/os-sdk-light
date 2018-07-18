@@ -27,9 +27,24 @@ class OSLCallableOperation(CallableOperation):
         except (SwaggerMappingError,
                 jsonschema.exceptions.ValidationError) as e:
             exc_type, exc_value, exc_traceback = sys.exc_info()
+            LOG.exception(
+                'Exception happens during request or response parsing. '
+                'Please check schema is valid and server version corresponds '
+                'to the declared')
             raise six.reraise(
                 exceptions.ValidationError,
                 exceptions.ValidationError(e),
+                exc_traceback)
+        except Exception as e:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            LOG.exception(
+                'Exception happens while getting response from server. '
+                'This could be part of the normal flow '
+                'like 404 for non existing objects')
+            new_exception = exceptions.UnexpectedResponse(e, e)
+            raise six.reraise(
+                exceptions.UnexpectedResponse,
+                new_exception,
                 exc_traceback)
 
 

@@ -35,3 +35,29 @@ class ValidationError(BaseException):
     """
 
     pass
+
+
+class UnexpectedResponse(BaseException):
+
+    """This happens if client does not get proper response.
+
+    For example, a server returns not expected status like 404, 500.
+    Client cannot create session or connection timeouted.
+
+    """
+
+    def __init__(self, message, orig_exception):
+        super(UnexpectedResponse, self).__init__(message)
+        self.orig_exception = orig_exception
+
+    @property
+    def status_code(self):
+        if hasattr(self.orig_exception, 'status_code'):
+            return self.orig_exception.status_code
+        return -1
+
+    @property
+    def message(self):
+        if hasattr(self.orig_exception, 'message'):
+            return self.orig_exception.message
+        return ''

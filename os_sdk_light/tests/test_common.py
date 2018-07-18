@@ -69,7 +69,7 @@ def test_incorrect_schema():
         osl.get_client('devstack', 'compute', f.name)
 
 
-def test_request_does_not_match_schema():
+def test_request_not_match_schema():
     compute = osl.get_client('devstack', 'compute', osl.schema('compute.yaml'))
     with pytest.raises(
             osl.exceptions.ValidationError,
@@ -81,7 +81,7 @@ def test_request_does_not_match_schema():
         compute.flavors.create_flavor(flavor={'flavor': {'name': 'test'}})
 
 
-def test_response_does_not_match_schema():
+def test_response_not_match_schema():
     compute = osl.get_client('devstack', 'compute', osl.schema('compute.yaml'))
     with mock.patch(
             'bravado.requests_client.RequestsResponseAdapter') as resp_class:
@@ -93,3 +93,18 @@ def test_response_does_not_match_schema():
                 osl.exceptions.ValidationError,
                 match='required property'):
             compute.flavors.get_flavor(flavor_id='fake')
+
+
+def test_not_defined_response():
+    compute = osl.get_client('devstack', 'compute', osl.schema('compute.yaml'))
+    with mock.patch(
+            'bravado.requests_client.RequestsResponseAdapter') as resp_class:
+        resp = mock.MagicMock()
+        resp.status_code = 404
+        resp.json.return_value = {}
+        resp_class.return_value = resp
+        try:
+            compute.flavors.get_flavor(flavor_id='fake')
+            pytest.fail('Exception must be thrown')
+        except osl.exceptions.UnexpectedResponse as e:
+            assert resp.status_code == e.status_code
