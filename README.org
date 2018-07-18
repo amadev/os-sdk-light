@@ -23,7 +23,7 @@ compute_client = osl.get_client(
     service='compute',
     schema=osl.schema('compute.yaml'))
 
-flavors = compute_client.flavors.list().response().result['flavors']
+flavors = compute_client.flavors.list_flavors()['flavors']
 #+END_SRC
 
 - [1] https://docs.openstack.org/os-client-config/latest/
