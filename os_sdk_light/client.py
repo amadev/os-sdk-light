@@ -80,45 +80,47 @@ def schema(name):
 def get_client(cloud, service, schema, config={}):
     try:
         cloud = os_client_config.OpenStackConfig(**config).get_one(cloud)
-    except ka_excs.MissingRequiredOptions:
+    except ka_excs.MissingRequiredOptions as e:
         LOG.exception(
             'Not enough params to build a cloud connection. '
             'Please provide config file or environment variables, '
             'See https://docs.openstack.org/'
             'os-client-config/latest/user/configuration.html')
         raise exceptions.CannotConnectToCloud(
-            'Not enough params to build a cloud connection')
+            'Not enough params to build a cloud connection: %s' % e)
 
     adapter = cloud.get_session_client(service)
     try:
         access_info = adapter.session.auth.get_access(adapter.session)
-    except (ka_excs.Unauthorized, ka_excs.BadRequest):
+    except (ka_excs.Unauthorized, ka_excs.BadRequest) as e:
         LOG.exception(
             'Cloud authentication failed. '
             'Please check credintial and auth_url')
-        raise exceptions.CannotConnectToCloud('Authentication failed')
+        raise exceptions.CannotConnectToCloud('Authentication failed: %s' % e)
     endpoints = access_info.service_catalog.get_endpoints()
     try:
         interface = cloud.config.get('interface', 'public')
         endpoint = [e for e in endpoints[service]
                     if e['interface'] == interface][0]
-    except (KeyError, IndexError, TypeError):
+    except (KeyError, IndexError, TypeError) as e:
         LOG.exception(
             'Endpoint for service %s with interface %s is not found. '
             'Try to check service exists in service catalog.'
             % (service, interface))
         raise exceptions.CannotConnectToCloud(
-            'Failed to find service endpoint')
+            'Failed to find service endpoint: %s' % e)
     try:
         with open(schema) as f:
             spec = yaml.safe_load(f)
             SwaggerClient.from_spec(spec)
-    except (IOError, ValueError, SwaggerValidationError):
+    except (IOError, ValueError, SwaggerValidationError) as e:
         LOG.exception(
             'Schema file %s cannot be read or incorrect. '
             'Please check file exists, accessible '
-            'and satisfies swagger 2.0 specification.')
-        raise exceptions.SchemaError('Schema file cannot be read or invalid')
+            'and satisfies swagger 2.0 specification.' % schema)
+        raise exceptions.SchemaError(
+            'Schema file cannot be read or invalid: %s' % e)
+
     url = urlparse.urlsplit(endpoint['url'])
     spec['host'] = url.netloc
     path = url.path[:-1] if url.path.endswith('/') else url.path
