@@ -1,0 +1,84 @@
+---
+  swagger: "2.0"
+  info:
+    version: "1.2"
+    title: "Placement API"
+    description: "https://developer.openstack.org/api-ref/placement/"
+  host: "localhost"
+  basePath: "/"
+  paths:
+    /resource_providers:
+      get:
+        operationId: "list_resource_providers"
+        description: "List resource providers."
+        parameters:
+          - in: query
+            name: name
+            type: string
+          - in: query
+            name: uuid
+            type: string
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              required:
+                - resource_providers
+              properties:
+                resource_providers:
+                  type: array
+                  items:
+                    type: object
+                    $ref: "#/definitions/ResourceProvider"
+      post:
+        operationId: "create_resource_provider"
+        description: "Creates a resource provider."
+        parameters:
+          - in: body
+            name: body
+            required: true
+            schema:
+              $ref: "#/definitions/ResourceProvider"
+        responses:
+          "201":
+            description: OK
+    /resource_providers/{resource_provider_id}:
+      get:
+        operationId: "get_resource_provider"
+        description: "Show Resource_Provider Details."
+        parameters:
+          - in: path
+            name: resource_provider_id
+            required: true
+            type: string
+        responses:
+          "200":
+            description: OK
+            schema:
+              $ref: "#/definitions/ResourceProvider"
+      delete:
+        operationId: "delete_resource_provider"
+        description: "Deletes a resource_provider."
+        parameters:
+          - in: path
+            name: resource_provider_id
+            required: true
+            type: string
+        responses:
+          "204":
+            description: OK
+
+  definitions:
+    ResourceProvider:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        uuid:
+          type: string
+        generation:
+          type: integer
+      additionalProperties: true
