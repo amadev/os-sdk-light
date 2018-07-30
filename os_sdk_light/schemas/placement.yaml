@@ -119,6 +119,30 @@
               properties:
                 inventories:
                   type: object
+
+    /resource_providers/{uuid}/usages:
+      get:
+        operationId: "get_usages"
+        description: "List resource provider usages."
+        parameters:
+          - in: path
+            name: uuid
+            required: true
+            type: string
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              required:
+                - usages
+                - resource_provider_generation
+              properties:
+                usages:
+                  type: object
+                resource_provider_generation:
+                  type: integer
+
   definitions:
     ResourceProvider:
       type: object
