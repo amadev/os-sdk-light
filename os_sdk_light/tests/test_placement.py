@@ -21,27 +21,27 @@ def rp():
     )['resource_providers'][0]
     yield rp
     placement_client.resource_providers.delete_resource_provider(
-        resource_provider_id=rp['uuid'])
+        uuid=rp['uuid'])
 
 
 def test_rps(rp):
     rp1 = placement_client.resource_providers.get_resource_provider(
-        resource_provider_id=rp['uuid'])
+        uuid=rp['uuid'])
     assert rp['name'] == rp1['name']
 
 
 def test_inventories(rp):
     placement_client.resource_providers.put_inventories(
-        resource_provider_id=rp['uuid'],
+        uuid=rp['uuid'],
         body={
             'resource_provider_generation': rp['generation'],
             'inventories': {'MEMORY_MB': {'total': 512}}}
     )
     invs = placement_client.resource_providers.get_inventories(
-        resource_provider_id=rp['uuid']
+        uuid=rp['uuid']
     )
     placement_client.resource_providers.put_inventories(
-        resource_provider_id=rp['uuid'],
+        uuid=rp['uuid'],
         body={
             'resource_provider_generation': invs['resource_provider_generation'],
             'inventories': {}}

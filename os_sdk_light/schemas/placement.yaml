@@ -43,13 +43,13 @@
         responses:
           "201":
             description: OK
-    /resource_providers/{resource_provider_id}:
+    /resource_providers/{uuid}:
       get:
         operationId: "get_resource_provider"
         description: "Show Resource_Provider Details."
         parameters:
           - in: path
-            name: resource_provider_id
+            name: uuid
             required: true
             type: string
         responses:
@@ -62,20 +62,20 @@
         description: "Deletes a resource_provider."
         parameters:
           - in: path
-            name: resource_provider_id
+            name: uuid
             required: true
             type: string
         responses:
           "204":
             description: OK
 
-    /resource_providers/{resource_provider_id}/inventories:
+    /resource_providers/{uuid}/inventories:
       get:
         operationId: "get_inventories"
         description: "List resource provider inventories."
         parameters:
           - in: path
-            name: resource_provider_id
+            name: uuid
             required: true
             type: string
         responses:
@@ -93,7 +93,7 @@
         description: "Update resource provider inventories."
         parameters:
           - in: path
-            name: resource_provider_id
+            name: uuid
             required: true
             type: string
           - in: body
