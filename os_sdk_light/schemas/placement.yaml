@@ -181,7 +181,9 @@
                 - resource_provider_generation
               properties:
                 traits:
-                  type: object
+                  type: array
+                  items:
+                    type: string
                 resource_provider_generation:
                   type: integer
 

@@ -43,6 +43,7 @@ def test_inventories(rp):
     placement_client.resource_providers.put_inventories(
         uuid=rp['uuid'],
         body={
-            'resource_provider_generation': invs['resource_provider_generation'],
+            'resource_provider_generation': invs[
+                'resource_provider_generation'],
             'inventories': {}}
     )
