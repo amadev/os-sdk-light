@@ -20,11 +20,14 @@ def main(limit):
             uuid=rp['uuid'])['usages']
         traits = placement_client.resource_providers.get_rp_traits(
             uuid=rp['uuid'])['traits']
+        aggregates = placement_client.resource_providers.get_aggregates(
+            uuid=rp['uuid'])['aggregates']
         for name, props in placement_client.resource_providers.get_inventories(
                 uuid=rp['uuid'])['inventories'].items():
             output[rp['uuid']][name] = {'total': props['total'],
                                         'used': usages.get(name, 0)}
         output[rp['uuid']]['traits'] = traits
+        output[rp['uuid']]['aggregates'] = aggregates
 
     print(yaml.safe_dump(output))
 

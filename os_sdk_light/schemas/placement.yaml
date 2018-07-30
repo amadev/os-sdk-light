@@ -187,6 +187,54 @@
                 resource_provider_generation:
                   type: integer
 
+    /resource_providers/{uuid}/aggregates:
+      get:
+        operationId: "get_aggregates"
+        description: "List resource provider aggregates."
+        parameters:
+          - in: path
+            name: uuid
+            required: true
+            type: string
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              required:
+                - aggregates
+              properties:
+                aggregates:
+                  type: array
+                  items:
+                    type: string
+      put:
+        operationId: "put_aggregates"
+        description: "Update resource provider aggregates."
+        parameters:
+          - in: path
+            name: uuid
+            required: true
+            type: string
+          - in: body
+            name: body
+            required: true
+            schema:
+              type: array
+              items:
+                type: string
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              required:
+                - aggregates
+              properties:
+                aggregates:
+                  type: array
+                  items:
+                    type: string
 
   definitions:
     ResourceProvider:

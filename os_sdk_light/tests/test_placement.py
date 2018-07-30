@@ -47,3 +47,20 @@ def test_inventories(rp):
                 'resource_provider_generation'],
             'inventories': {}}
     )
+
+
+def test_aggregates(rp):
+    u1 = '%s' % uuid.uuid4()
+    u2 = '%s' % uuid.uuid4()
+    placement_client.resource_providers.put_aggregates(
+        uuid=rp['uuid'],
+        body=[u1, u2]
+    )
+    aggs = placement_client.resource_providers.get_aggregates(
+        uuid=rp['uuid']
+    )['aggregates']
+    assert set([u1, u2]) == set(aggs)
+    placement_client.resource_providers.put_aggregates(
+        uuid=rp['uuid'],
+        body=[]
+    )
