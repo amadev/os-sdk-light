@@ -108,3 +108,7 @@ def test_not_defined_response():
             pytest.fail('Exception must be thrown')
         except osl.exceptions.UnexpectedResponse as e:
             assert resp.status_code == e.status_code
+
+def test_microversion_in_header():
+    p = osl.get_client('devstack', 'placement', osl.schema('placement.yaml'))
+    p.traits.get_traits()

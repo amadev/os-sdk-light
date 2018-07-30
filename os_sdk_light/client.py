@@ -73,6 +73,15 @@ class OSLSwaggerClient(SwaggerClient):
         return OSLResourceDecorator(resource, False)
 
 
+class OSLRequestsClient(RequestsClient):
+    def request(self, *args, **kwargs):
+        http_future = super(OSLRequestsClient, self).request(*args, **kwargs)
+        if hasattr(self, 'custom_headers'):
+            for header, value in self.custom_headers:
+                http_future.future.request.headers.setdefault(header, value)
+        return http_future
+
+
 def schema(name):
     return SCHEMAS + name
 
@@ -129,11 +138,17 @@ def get_client(cloud, service, schema, config={}):
     LOG.debug('Got swagger server configuration for service %s: %s%s',
               service, spec['host'], spec['basePath'])
 
-    http_client = RequestsClient()
+    http_client = OSLRequestsClient()
     http_client.set_api_key(
         url.hostname, access_info.auth_token,
         param_name='x-auth-token', param_in='header'
     )
+    version_header = spec['info'].get('x-version-header')
+    if version_header:
+        template = spec['info'].get('x-version-header-value-template', '%s')
+        http_client.custom_headers = [
+            (version_header, template % spec['info']['version'])]
+
     client = OSLSwaggerClient.from_spec(
         spec,
         http_client=http_client,
