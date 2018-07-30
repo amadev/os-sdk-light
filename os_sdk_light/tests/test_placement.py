@@ -10,7 +10,8 @@ placement_client = osl.get_client(
     CLOUD, 'placement', osl.schema('placement.yaml'))
 
 
-def test_rps():
+@pytest.fixture
+def rp():
     orig_rp = {'name': TEST_RP}
     placement_client.resource_providers.create_resource_provider(
         body=orig_rp
@@ -18,8 +19,30 @@ def test_rps():
     rp = placement_client.resource_providers.list_resource_providers(
         name=orig_rp['name']
     )['resource_providers'][0]
+    yield rp
+    placement_client.resource_providers.delete_resource_provider(
+        resource_provider_id=rp['uuid'])
+
+
+def test_rps(rp):
     rp1 = placement_client.resource_providers.get_resource_provider(
         resource_provider_id=rp['uuid'])
     assert rp['name'] == rp1['name']
-    placement_client.resource_providers.delete_resource_provider(
-        resource_provider_id=rp['uuid'])
+
+
+def test_inventories(rp):
+    placement_client.resource_providers.put_inventories(
+        resource_provider_id=rp['uuid'],
+        body={
+            'resource_provider_generation': rp['generation'],
+            'inventories': {'MEMORY_MB': {'total': 512}}}
+    )
+    invs = placement_client.resource_providers.get_inventories(
+        resource_provider_id=rp['uuid']
+    )
+    placement_client.resource_providers.put_inventories(
+        resource_provider_id=rp['uuid'],
+        body={
+            'resource_provider_generation': invs['resource_provider_generation'],
+            'inventories': {}}
+    )

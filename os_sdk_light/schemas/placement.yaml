@@ -69,6 +69,56 @@
           "204":
             description: OK
 
+    /resource_providers/{resource_provider_id}/inventories:
+      get:
+        operationId: "get_inventories"
+        description: "List resource provider inventories."
+        parameters:
+          - in: path
+            name: resource_provider_id
+            required: true
+            type: string
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              required:
+                - inventories
+              properties:
+                inventories:
+                  type: object
+      put:
+        operationId: "put_inventories"
+        description: "Update resource provider inventories."
+        parameters:
+          - in: path
+            name: resource_provider_id
+            required: true
+            type: string
+          - in: body
+            name: body
+            required: true
+            schema:
+              type: object
+              required:
+                - resource_provider_generation
+                - inventories
+              properties:
+                resource_provider_generation:
+                  type: integer
+                inventories:
+                  type: object
+        responses:
+          "200":
+            description: OK
+            schema:
+              type: object
+              required:
+                - inventories
+              properties:
+                inventories:
+                  type: object
   definitions:
     ResourceProvider:
       type: object
