@@ -96,6 +96,10 @@
               properties:
                 server:
                   type: object
+          default:
+            description: UNKNOWN
+            schema:
+              type: object
     /servers/{server_id}:
       get:
         operationId: "get_server"
