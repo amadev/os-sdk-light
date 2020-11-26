@@ -84,11 +84,11 @@ def test_request_not_match_schema():
 def test_response_not_match_schema():
     compute = osl.get_client('devstack', 'compute', osl.schema('compute.yaml'))
     with mock.patch(
-            'bravado.requests_client.RequestsResponseAdapter') as resp_class:
+            'bravado.http_future.HttpFuture._get_incoming_response') as get_resp:
         resp = mock.MagicMock()
         resp.status_code = 200
         resp.json.return_value = {}
-        resp_class.return_value = resp
+        get_resp.return_value = resp
         with pytest.raises(
                 osl.exceptions.ValidationError,
                 match='required property'):
