@@ -9,4 +9,4 @@ clouds:
     auth:
       username: admin
       password: stack
-      auth_url: http://172.18.237.203/identity
+      auth_url: http://192.168.110.10/identity
