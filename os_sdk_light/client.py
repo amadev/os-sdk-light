@@ -86,9 +86,14 @@ def schema(name):
     return SCHEMAS + name
 
 
-def get_client(cloud, service, schema, config={}):
+def get_client(cloud, service, schema, config={}, cloud_config={}):
     try:
-        cloud = os_client_config.OpenStackConfig(**config).get_one(cloud)
+        if cloud_config:
+            cnf = os_client_config.OpenStackConfig()
+            cnf.cloud_config = cloud_config
+            cloud = cnf.get_one(cloud)
+        else:
+            cloud = os_client_config.OpenStackConfig(**config).get_one(cloud)
     except ka_excs.MissingRequiredOptions as e:
         LOG.exception(
             'Not enough params to build a cloud connection. '
