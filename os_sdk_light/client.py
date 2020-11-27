@@ -145,7 +145,7 @@ def get_client(cloud, service, schema, config={}, cloud_config={}):
 
     http_client = OSLRequestsClient()
     http_client.set_api_key(
-        url.hostname, access_info.auth_token,
+        url.netloc, access_info.auth_token,
         param_name='x-auth-token', param_in='header'
     )
     version_header = spec['info'].get('x-version-header')
