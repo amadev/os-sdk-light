@@ -36,6 +36,10 @@
             description: OK
             schema:
               $ref: "#/definitions/FlavorWrapper"
+          default:
+            description: UNKNOWN
+            schema:
+              type: object
     /flavors/{flavor_id}:
       get:
         operationId: "get_flavor"
@@ -113,7 +117,7 @@
           "200":
             description: OK
             schema:
-              $ref: "#/definitions/ServerWrapper"
+              $ref: "#/definitions/ServerAnswerWrapper"
       delete:
         operationId: "delete_server"
         description: "Deletes a server."
@@ -177,3 +181,10 @@
       properties:
         server:
           $ref: "#/definitions/Server"
+    ServerAnswerWrapper:
+      type: object
+      required:
+        - server
+      properties:
+        server:
+          type: object
