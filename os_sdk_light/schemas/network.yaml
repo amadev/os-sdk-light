@@ -1,199 +1,306 @@
 ---
-  swagger: "2.0"
-  info:
-    version: "2"
-    title: "Network API"
-    description: "https://developer.openstack.org/api-ref/network/v2/"
-  host: "localhost"
-  basePath: "/v2.0"
-  paths:
-    /networks:
-      get:
-        operationId: "list"
-        description: "List networks."
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - networks
-              properties:
-                networks:
-                  type: array
-                  items:
-                    type: object
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
-    /security_groups:
-      get:
-        operationId: "list_securitygroups"
-        description: "List security groups."
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - security_groups
-              properties:
-                security_groups:
-                  type: array
-                  items:
-                    type: object
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
-    /floatingips:
-      get:
-        operationId: "list_floatingips"
-        description: "List floating IPs."
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - floatingips
-              properties:
-                floatingips:
-                  type: array
-                  items:
-                    type: object
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
-    /ports:
-      get:
-        operationId: "list_ports"
-        description: "List ports."
-        parameters:
-          - in: query
-            name: device_id
-            type: string
-          - in: query
-            name: id
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - ports
-              properties:
-                ports:
-                  type: array
-                  items:
-                    type: object
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
-      post:
-        operationId: "create_port"
-        description: "Creates a port."
-        parameters:
-          - in: body
-            name: port
-            required: true
-            schema:
-              type: object
-              required:
-                - port
-              properties:
-                port:
+swagger: "2.0"
+info:
+  version: "2"
+  title: "Network API"
+  description: "https://developer.openstack.org/api-ref/network/v2/"
+host: "localhost"
+basePath: "/v2.0"
+paths:
+  /networks:
+    get:
+      operationId: "list"
+      description: "List networks."
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - networks
+            properties:
+              networks:
+                type: array
+                items:
                   type: object
-                  required:
-                    - network_id
-                  properties:
-                    network_id:
-                      type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - port
-              properties:
-                port:
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+  /security_groups:
+    get:
+      operationId: "list_securitygroups"
+      description: "List security groups."
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - security_groups
+            properties:
+              security_groups:
+                type: array
+                items:
                   type: object
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
-    /ports/{port_id}:
-      get:
-        operationId: "get_port"
-        description: "Show Port Details."
-        parameters:
-          - in: path
-            name: port_id
-            required: true
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - port
-              properties:
-                port:
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+  /floatingips:
+    get:
+      operationId: "list_floatingips"
+      description: "List floating IPs."
+      parameters:
+        - in: query
+          name: id
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - floatingips
+            properties:
+              floatingips:
+                type: array
+                items:
                   type: object
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
-      delete:
-        operationId: "delete_port"
-        description: "Deletes a port."
-        parameters:
-          - in: path
-            name: port_id
-            required: true
-            type: string
-        responses:
-          "202":
-            description: OK
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
-      put:
-        operationId: "update_port"
-        description: "Updates a port."
-        parameters:
-          - in: path
-            name: port_id
-            required: true
-            type: string
-          - in: body
-            name: port
-            required: true
-            schema:
-              type: object
-              required:
-                - port
-              properties:
-                port:
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    post:
+      operationId: "create_floatingip"
+      description: "Creates a floatingip."
+      parameters:
+        - in: body
+          name: floatingip
+          required: true
+          schema:
+            type: object
+            required:
+              - floatingip
+            properties:
+              floatingip:
+                type: object
+                required:
+                  - floating_network_id
+                properties:
+                  floating_network_id:
+                    type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - floatingip
+            properties:
+              floatingip:
+                type: object
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+  /floatingips/{floatingip_id}:
+    get:
+      operationId: "get_floatingip"
+      description: "Show Floatingip Details."
+      parameters:
+        - in: path
+          name: floatingip_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - floatingip
+            properties:
+              floatingip:
+                type: object
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    delete:
+      operationId: "delete_floatingip"
+      description: "Deletes a floatingip."
+      parameters:
+        - in: path
+          name: floatingip_id
+          required: true
+          type: string
+      responses:
+        "202":
+          description: OK
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    put:
+      operationId: "update_floatingip"
+      description: "Updates a floatingip."
+      parameters:
+        - in: path
+          name: floatingip_id
+          required: true
+          type: string
+        - in: body
+          name: floatingip
+          required: true
+          schema:
+            type: object
+            required:
+              - floatingip
+            properties:
+              floatingip:
+                type: object
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - floatingip
+            properties:
+              floatingip:
+                type: object
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+  /ports:
+    get:
+      operationId: "list_ports"
+      description: "List ports."
+      parameters:
+        - in: query
+          name: device_id
+          type: string
+        - in: query
+          name: id
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - ports
+            properties:
+              ports:
+                type: array
+                items:
                   type: object
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - port
-              properties:
-                port:
-                  type: object
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    post:
+      operationId: "create_port"
+      description: "Creates a port."
+      parameters:
+        - in: body
+          name: port
+          required: true
+          schema:
+            type: object
+            required:
+              - port
+            properties:
+              port:
+                type: object
+                required:
+                  - network_id
+                properties:
+                  network_id:
+                    type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - port
+            properties:
+              port:
+                type: object
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+  /ports/{port_id}:
+    get:
+      operationId: "get_port"
+      description: "Show Port Details."
+      parameters:
+        - in: path
+          name: port_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - port
+            properties:
+              port:
+                type: object
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    delete:
+      operationId: "delete_port"
+      description: "Deletes a port."
+      parameters:
+        - in: path
+          name: port_id
+          required: true
+          type: string
+      responses:
+        "202":
+          description: OK
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    put:
+      operationId: "update_port"
+      description: "Updates a port."
+      parameters:
+        - in: path
+          name: port_id
+          required: true
+          type: string
+        - in: body
+          name: port
+          required: true
+          schema:
+            type: object
+            required:
+              - port
+            properties:
+              port:
+                type: object
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - port
+            properties:
+              port:
+                type: object
+        default:
+          description: UNKNOWN
+          schema:
+            type: object

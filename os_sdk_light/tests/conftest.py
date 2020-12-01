@@ -1,8 +1,8 @@
+import time
 import pytest
 import uuid
 import os_sdk_light as osl
 from bravado_core import exception
-
 
 TEST_FLAVOR = "test flavor %s" % uuid.uuid4()
 TEST_SERVER = "test server %s" % uuid.uuid4()
@@ -12,24 +12,8 @@ image_client = osl.get_client(CLOUD, "image", osl.schema("image.yaml"))
 network_client = osl.get_client(CLOUD, "network", osl.schema("network.yaml"))
 
 
-def test_list_flavors():
-    for flavor in compute_client.flavors.list_flavors()["flavors"]:
-        assert "id" in flavor
-        assert "name" in flavor
-
-
-def test_create_flavor():
-    with pytest.raises(osl.exceptions.ValidationError):
-        compute_client.flavors.create_flavor()
-    flavor = compute_client.flavors.create_flavor(
-        flavor={"flavor": {"name": TEST_FLAVOR, "ram": 16384, "disk": 1, "vcpus": 2}}
-    )["flavor"]
-    new_flavor = compute_client.flavors.get_flavor(flavor_id=flavor["id"])["flavor"]
-    assert flavor["name"] == new_flavor["name"]
-    compute_client.flavors.delete_flavor(flavor_id=flavor["id"])
-
-
-def test_server():
+@pytest.fixture
+def server():
     flavors = compute_client.flavors.list_flavors()["flavors"]
     flavors.sort(key=lambda x: x["ram"])
     flavor = flavors[0]
@@ -47,4 +31,12 @@ def test_server():
             }
         }
     )["server"]
+    for i in range(20):
+        server = compute_client.servers.get_server(server_id=server['id'])['server']
+        if server['status'] == 'ACTIVE':
+            break
+        time.sleep(1)
+    else:
+        raise ValueError('Timeout waiting server active')
+    yield server
     compute_client.servers.delete_server(server_id=server["id"])
