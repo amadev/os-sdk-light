@@ -79,7 +79,7 @@
                 servers:
                   type: array
                   items:
-                    $ref: "#/definitions/Server"
+                    type: object
     /servers:
       post:
         operationId: "create_server"
