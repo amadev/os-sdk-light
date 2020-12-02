@@ -1,25 +1,119 @@
 ---
-  swagger: "2.0"
-  info:
-    version: "2"
-    title: "Image API"
-    description: "https://developer.openstack.org/api-ref/image/v2/"
-  host: "localhost"
-  basePath: "/v2/"
-  paths:
-    /images:
-      get:
-        operationId: "list"
-        description: "List images."
-        responses:
-          "200":
-            description: OK
-            schema:
+swagger: "2.0"
+info:
+  version: "2"
+  title: "Image API"
+  description: "https://developer.openstack.org/api-ref/image/v2/"
+host: "localhost"
+basePath: "/v2/"
+paths:
+  /images:
+    get:
+      operationId: "list"
+      description: "List images."
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - images
+            properties:
+              images:
+                type: array
+                items:
+                  type: object
+    post:
+      operationId: "create_image"
+      description: "Creates an image."
+      parameters:
+        - in: body
+          name: image
+          required: true
+          schema:
+            type: object
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+  /images/{image_id}:
+    get:
+      operationId: "get_image"
+      description: "Show Image Details."
+      parameters:
+        - in: path
+          name: image_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    delete:
+      operationId: "delete_image"
+      description: "Deletes an image."
+      parameters:
+        - in: path
+          name: image_id
+          required: true
+          type: string
+      responses:
+        "204":
+          description: OK
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    patch:
+      operationId: "update_image"
+      description: "Updates an image."
+      consumes:
+        - application/json
+      produces:
+        - application/openstack-images-v2.1-json-patch
+      parameters:
+        - in: path
+          name: image_id
+          required: true
+          type: string
+        - in: body
+          name: image
+          required: true
+          schema:
+            type: array
+            items:
               type: object
-              required:
-                - images
-              properties:
-                images:
-                  type: array
-                  items:
-                    type: object
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - id
+            properties:
+              id:
+                type: string
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
