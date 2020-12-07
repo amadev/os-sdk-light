@@ -161,6 +161,54 @@ paths:
                 type: array
                 items:
                   type: string
+  /traits/{name}:
+    get:
+      operationId: "get_trait"
+      description: "Show Trait Details."
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
+      responses:
+        "204":
+          description: OK
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    delete:
+      operationId: "delete_trait"
+      description: "Deletes a trait."
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
+      responses:
+        "202":
+          description: OK
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+    put:
+      operationId: "set_trait"
+      description: "Set a trait."
+      parameters:
+        - in: path
+          name: name
+          required: true
+          type: string
+      responses:
+        "201":
+          description: CREATED
+        "204":
+          description: UPDATED
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
 
   /resource_providers/{uuid}/traits:
     get:
