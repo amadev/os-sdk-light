@@ -1,251 +1,251 @@
 ---
-  swagger: "2.0"
-  info:
-    version: "1.6"
-    x-version-header: "OpenStack-API-Version"
-    x-version-header-value-template: "placement %s"
-    title: "Placement API"
-    description: "https://developer.openstack.org/api-ref/placement/"
-  host: "localhost"
-  basePath: "/"
-  paths:
-    /resource_providers:
-      get:
-        operationId: "list_resource_providers"
-        description: "List resource providers."
-        parameters:
-          - in: query
-            name: name
-            type: string
-          - in: query
-            name: uuid
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - resource_providers
-              properties:
-                resource_providers:
-                  type: array
-                  items:
-                    type: object
-                    $ref: "#/definitions/ResourceProvider"
-      post:
-        operationId: "create_resource_provider"
-        description: "Creates a resource provider."
-        parameters:
-          - in: body
-            name: body
-            required: true
-            schema:
-              $ref: "#/definitions/ResourceProvider"
-        responses:
-          "201":
-            description: OK
-    /resource_providers/{uuid}:
-      get:
-        operationId: "get_resource_provider"
-        description: "Show Resource_Provider Details."
-        parameters:
-          - in: path
-            name: uuid
-            required: true
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              $ref: "#/definitions/ResourceProvider"
-      delete:
-        operationId: "delete_resource_provider"
-        description: "Deletes a resource_provider."
-        parameters:
-          - in: path
-            name: uuid
-            required: true
-            type: string
-        responses:
-          "204":
-            description: OK
-
-    /resource_providers/{uuid}/inventories:
-      get:
-        operationId: "get_inventories"
-        description: "List resource provider inventories."
-        parameters:
-          - in: path
-            name: uuid
-            required: true
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - inventories
-              properties:
-                inventories:
-                  type: object
-      put:
-        operationId: "put_inventories"
-        description: "Update resource provider inventories."
-        parameters:
-          - in: path
-            name: uuid
-            required: true
-            type: string
-          - in: body
-            name: body
-            required: true
-            schema:
-              type: object
-              required:
-                - resource_provider_generation
-                - inventories
-              properties:
-                resource_provider_generation:
-                  type: integer
-                inventories:
-                  type: object
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - inventories
-              properties:
-                inventories:
-                  type: object
-
-    /resource_providers/{uuid}/usages:
-      get:
-        operationId: "get_usages"
-        description: "List resource provider usages."
-        parameters:
-          - in: path
-            name: uuid
-            required: true
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - usages
-                - resource_provider_generation
-              properties:
-                usages:
-                  type: object
-                resource_provider_generation:
-                  type: integer
-
-    /traits:
-      get:
-        operationId: "get_traits"
-        description: "List traits."
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - traits
-              properties:
-                traits:
-                  type: array
-                  items:
-                    type: string
-
-    /resource_providers/{uuid}/traits:
-      get:
-        operationId: "get_rp_traits"
-        description: "List resource provider traits."
-        parameters:
-          - in: path
-            name: uuid
-            required: true
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - traits
-                - resource_provider_generation
-              properties:
-                traits:
-                  type: array
-                  items:
-                    type: string
-                resource_provider_generation:
-                  type: integer
-
-    /resource_providers/{uuid}/aggregates:
-      get:
-        operationId: "get_aggregates"
-        description: "List resource provider aggregates."
-        parameters:
-          - in: path
-            name: uuid
-            required: true
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - aggregates
-              properties:
-                aggregates:
-                  type: array
-                  items:
-                    type: string
-      put:
-        operationId: "put_aggregates"
-        description: "Update resource provider aggregates."
-        parameters:
-          - in: path
-            name: uuid
-            required: true
-            type: string
-          - in: body
-            name: body
-            required: true
-            schema:
-              type: array
-              items:
-                type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              required:
-                - aggregates
-              properties:
-                aggregates:
-                  type: array
-                  items:
-                    type: string
-
-  definitions:
-    ResourceProvider:
-      type: object
-      required:
-        - name
-      properties:
-        name:
+swagger: "2.0"
+info:
+  version: "1.6"
+  x-version-header: "OpenStack-API-Version"
+  x-version-header-value-template: "placement %s"
+  title: "Placement API"
+  description: "https://developer.openstack.org/api-ref/placement/"
+host: "localhost"
+basePath: "/"
+paths:
+  /resource_providers:
+    get:
+      operationId: "list_resource_providers"
+      description: "List resource providers."
+      parameters:
+        - in: query
+          name: name
           type: string
-        uuid:
+        - in: query
+          name: uuid
           type: string
-        generation:
-          type: integer
-      additionalProperties: true
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - resource_providers
+            properties:
+              resource_providers:
+                type: array
+                items:
+                  type: object
+                  $ref: "#/definitions/ResourceProvider"
+    post:
+      operationId: "create_resource_provider"
+      description: "Creates a resource provider."
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: "#/definitions/ResourceProvider"
+      responses:
+        "201":
+          description: OK
+  /resource_providers/{uuid}:
+    get:
+      operationId: "get_resource_provider"
+      description: "Show Resource_Provider Details."
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/ResourceProvider"
+    delete:
+      operationId: "delete_resource_provider"
+      description: "Deletes a resource_provider."
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          type: string
+      responses:
+        "204":
+          description: OK
+
+  /resource_providers/{uuid}/inventories:
+    get:
+      operationId: "get_inventories"
+      description: "List resource provider inventories."
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - inventories
+            properties:
+              inventories:
+                type: object
+    put:
+      operationId: "put_inventories"
+      description: "Update resource provider inventories."
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: object
+            required:
+              - resource_provider_generation
+              - inventories
+            properties:
+              resource_provider_generation:
+                type: integer
+              inventories:
+                type: object
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - inventories
+            properties:
+              inventories:
+                type: object
+
+  /resource_providers/{uuid}/usages:
+    get:
+      operationId: "get_usages"
+      description: "List resource provider usages."
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - usages
+              - resource_provider_generation
+            properties:
+              usages:
+                type: object
+              resource_provider_generation:
+                type: integer
+
+  /traits:
+    get:
+      operationId: "get_traits"
+      description: "List traits."
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - traits
+            properties:
+              traits:
+                type: array
+                items:
+                  type: string
+
+  /resource_providers/{uuid}/traits:
+    get:
+      operationId: "get_rp_traits"
+      description: "List resource provider traits."
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - traits
+              - resource_provider_generation
+            properties:
+              traits:
+                type: array
+                items:
+                  type: string
+              resource_provider_generation:
+                type: integer
+
+  /resource_providers/{uuid}/aggregates:
+    get:
+      operationId: "get_aggregates"
+      description: "List resource provider aggregates."
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - aggregates
+            properties:
+              aggregates:
+                type: array
+                items:
+                  type: string
+    put:
+      operationId: "put_aggregates"
+      description: "Update resource provider aggregates."
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          type: string
+        - in: body
+          name: body
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - aggregates
+            properties:
+              aggregates:
+                type: array
+                items:
+                  type: string
+
+definitions:
+  ResourceProvider:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      uuid:
+        type: string
+      generation:
+        type: integer
+    additionalProperties: true

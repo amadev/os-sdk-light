@@ -1,227 +1,227 @@
 ---
-  swagger: "2.0"
-  info:
-    version: "2.1"
-    title: "Compute API"
-    description: "https://developer.openstack.org/api-ref/compute/"
-  host: "localhost"
-  basePath: "/"
-  paths:
-    /flavors/detail:
-      get:
-        operationId: "list_flavors"
-        description: "Lists all flavors accessible to your project."
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              properties:
-                flavors:
-                  type: array
-                  items:
-                    $ref: "#/definitions/Flavor"
-    /flavors:
-      post:
-        operationId: "create_flavor"
-        description: "Creates a flavor."
-        parameters:
-          - in: body
-            name: flavor
-            required: true
-            schema:
-              $ref: "#/definitions/FlavorWrapper"
-        responses:
-          "200":
-            description: OK
-            schema:
-              $ref: "#/definitions/FlavorWrapper"
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
-    /flavors/{flavor_id}:
-      get:
-        operationId: "get_flavor"
-        description: "Show Flavor Details."
-        parameters:
-          - in: path
-            name: flavor_id
-            required: true
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              $ref: "#/definitions/FlavorWrapper"
-      delete:
-        operationId: "delete_flavor"
-        description: "Deletes a flavor."
-        parameters:
-          - in: path
-            name: flavor_id
-            required: true
-            type: string
-        responses:
-          "202":
-            description: OK
-
-    /servers/detail:
-      get:
-        operationId: "list_servers"
-        description: "Lists all servers accessible to your project."
-        parameters:
-        - in: query
-          name: all_tenants
-          type: string
-        - in: query
-          name: availability_zone
-          type: string
-        - in: query
-          name: changes-since
-          type: string
-        - in: query
-          name: created_at
-          type: string
-        - in: query
-          name: description
-          type: string
-        - in: query
-          name: flavor
-          type: string
-        - in: query
-          name: image
-          type: string
-        - in: query
-          name: key_name
-          type: string
-        - in: query
-          name: name
-          type: string
-        - in: query
-          name: status
-          type: string
-        - in: query
-          name: uuid
-          type: string
-        - in: query
-          name: user_id
-          type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              type: object
-              properties:
-                servers:
-                  type: array
-                  items:
-                    type: object
-    /servers:
-      post:
-        operationId: "create_server"
-        description: "Creates a server."
-        parameters:
-          - in: body
-            name: server
-            required: true
-            schema:
-              $ref: "#/definitions/ServerWrapper"
-        responses:
-          "202":
-            description: OK
-            schema:
-              type: object
-              required:
-                - server
-              properties:
-                server:
-                  type: object
-          default:
-            description: UNKNOWN
-            schema:
-              type: object
-    /servers/{server_id}:
-      get:
-        operationId: "get_server"
-        description: "Show Server Details."
-        parameters:
-          - in: path
-            name: server_id
-            required: true
-            type: string
-        responses:
-          "200":
-            description: OK
-            schema:
-              $ref: "#/definitions/ServerAnswerWrapper"
-      delete:
-        operationId: "delete_server"
-        description: "Deletes a server."
-        parameters:
-          - in: path
-            name: server_id
-            required: true
-            type: string
-        responses:
-          "204":
-            description: OK
-
-  definitions:
-    Flavor:
-      type: object
-      required:
-        - name
-        - ram
-        - disk
-        - vcpus
-      properties:
-        name:
-          type: string
-        ram:
-          type: integer
-        disk:
-          type: integer
-        vcpus:
-          type: integer
-      additionalProperties: true
-    FlavorWrapper:
-      type: object
-      required:
-        - flavor
-      properties:
-        flavor:
-          $ref: "#/definitions/Flavor"
-    Server:
-      type: object
-      required:
-        - name
-        - imageRef
-        - flavorRef
-        - networks
-      properties:
-        name:
-          type: string
-        imageRef:
-          type: string
-        flavorRef:
-          type: string
-        networks:
-          type: array
-          items:
+swagger: "2.0"
+info:
+  version: "2.1"
+  title: "Compute API"
+  description: "https://developer.openstack.org/api-ref/compute/"
+host: "localhost"
+basePath: "/"
+paths:
+  /flavors/detail:
+    get:
+      operationId: "list_flavors"
+      description: "Lists all flavors accessible to your project."
+      responses:
+        "200":
+          description: OK
+          schema:
             type: object
-      additionalProperties: true
-    ServerWrapper:
-      type: object
-      required:
-        - server
-      properties:
-        server:
-          $ref: "#/definitions/Server"
-    ServerAnswerWrapper:
-      type: object
-      required:
-        - server
-      properties:
-        server:
+            properties:
+              flavors:
+                type: array
+                items:
+                  $ref: "#/definitions/Flavor"
+  /flavors:
+    post:
+      operationId: "create_flavor"
+      description: "Creates a flavor."
+      parameters:
+        - in: body
+          name: flavor
+          required: true
+          schema:
+            $ref: "#/definitions/FlavorWrapper"
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/FlavorWrapper"
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+  /flavors/{flavor_id}:
+    get:
+      operationId: "get_flavor"
+      description: "Show Flavor Details."
+      parameters:
+        - in: path
+          name: flavor_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/FlavorWrapper"
+    delete:
+      operationId: "delete_flavor"
+      description: "Deletes a flavor."
+      parameters:
+        - in: path
+          name: flavor_id
+          required: true
+          type: string
+      responses:
+        "202":
+          description: OK
+
+  /servers/detail:
+    get:
+      operationId: "list_servers"
+      description: "Lists all servers accessible to your project."
+      parameters:
+      - in: query
+        name: all_tenants
+        type: string
+      - in: query
+        name: availability_zone
+        type: string
+      - in: query
+        name: changes-since
+        type: string
+      - in: query
+        name: created_at
+        type: string
+      - in: query
+        name: description
+        type: string
+      - in: query
+        name: flavor
+        type: string
+      - in: query
+        name: image
+        type: string
+      - in: query
+        name: key_name
+        type: string
+      - in: query
+        name: name
+        type: string
+      - in: query
+        name: status
+        type: string
+      - in: query
+        name: uuid
+        type: string
+      - in: query
+        name: user_id
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            properties:
+              servers:
+                type: array
+                items:
+                  type: object
+  /servers:
+    post:
+      operationId: "create_server"
+      description: "Creates a server."
+      parameters:
+        - in: body
+          name: server
+          required: true
+          schema:
+            $ref: "#/definitions/ServerWrapper"
+      responses:
+        "202":
+          description: OK
+          schema:
+            type: object
+            required:
+              - server
+            properties:
+              server:
+                type: object
+        default:
+          description: UNKNOWN
+          schema:
+            type: object
+  /servers/{server_id}:
+    get:
+      operationId: "get_server"
+      description: "Show Server Details."
+      parameters:
+        - in: path
+          name: server_id
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: "#/definitions/ServerAnswerWrapper"
+    delete:
+      operationId: "delete_server"
+      description: "Deletes a server."
+      parameters:
+        - in: path
+          name: server_id
+          required: true
+          type: string
+      responses:
+        "204":
+          description: OK
+
+definitions:
+  Flavor:
+    type: object
+    required:
+      - name
+      - ram
+      - disk
+      - vcpus
+    properties:
+      name:
+        type: string
+      ram:
+        type: integer
+      disk:
+        type: integer
+      vcpus:
+        type: integer
+    additionalProperties: true
+  FlavorWrapper:
+    type: object
+    required:
+      - flavor
+    properties:
+      flavor:
+        $ref: "#/definitions/Flavor"
+  Server:
+    type: object
+    required:
+      - name
+      - imageRef
+      - flavorRef
+      - networks
+    properties:
+      name:
+        type: string
+      imageRef:
+        type: string
+      flavorRef:
+        type: string
+      networks:
+        type: array
+        items:
           type: object
+    additionalProperties: true
+  ServerWrapper:
+    type: object
+    required:
+      - server
+    properties:
+      server:
+        $ref: "#/definitions/Server"
+  ServerAnswerWrapper:
+    type: object
+    required:
+      - server
+    properties:
+      server:
+        type: object
