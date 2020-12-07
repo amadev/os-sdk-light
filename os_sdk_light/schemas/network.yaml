@@ -11,6 +11,16 @@ paths:
     get:
       operationId: "list"
       description: "List networks."
+      parameters:
+        - in: query
+          name: name
+          type: string
+        - in: query
+          name: id
+          type: string
+        - in: query
+          name: project_id
+          type: string
       responses:
         "200":
           description: OK

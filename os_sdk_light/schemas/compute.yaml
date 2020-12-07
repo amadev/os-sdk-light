@@ -11,6 +11,13 @@ paths:
     get:
       operationId: "list_flavors"
       description: "Lists all flavors accessible to your project."
+      parameters:
+        - in: query
+          name: sort_key
+          type: string
+        - in: query
+          name: limit
+          type: integer
       responses:
         "200":
           description: OK
@@ -198,7 +205,6 @@ definitions:
       - name
       - imageRef
       - flavorRef
-      - networks
     properties:
       name:
         type: string
