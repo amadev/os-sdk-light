@@ -135,10 +135,10 @@ def get_client(cloud, service, schema, config={}, cloud_config={}):
         raise exceptions.SchemaError(
             'Schema file cannot be read or invalid: %s' % e)
 
+    client_endpoint = endpoint['url'].rstrip('/') + spec['basePath']
     url = urlparse.urlsplit(endpoint['url'])
     spec['host'] = url.netloc
-    path = url.path[:-1] if url.path.endswith('/') else url.path
-    spec['basePath'] = path + spec['basePath']
+    spec['basePath'] = url.path.rstrip('/') + spec['basePath']
     spec['schemes'] = [url.scheme]
     LOG.debug('Got swagger server configuration for service %s: %s%s',
               service, spec['host'], spec['basePath'])
@@ -158,4 +158,6 @@ def get_client(cloud, service, schema, config={}, cloud_config={}):
         spec,
         http_client=http_client,
         config=config)
+    client.endpoint = client_endpoint
+    client.token = access_info.auth_token
     return client
