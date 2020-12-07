@@ -11,6 +11,31 @@ paths:
     get:
       operationId: "list"
       description: "List images."
+      parameters:
+        - in: query
+          name: name
+          type: string
+        - in: query
+          name: owner
+          type: string
+        - in: query
+          name: status
+          type: string
+        - in: query
+          name: tag
+          type: string
+        - in: query
+          name: size_max
+          type: string
+        - in: query
+          name: size_min
+          type: string
+        - in: query
+          name: created_at
+          type: string
+        - in: query
+          name: updated_at
+          type: string
       responses:
         "200":
           description: OK

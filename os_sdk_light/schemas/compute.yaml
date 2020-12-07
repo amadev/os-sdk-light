@@ -70,6 +70,43 @@
       get:
         operationId: "list_servers"
         description: "Lists all servers accessible to your project."
+        parameters:
+        - in: query
+          name: all_tenants
+          type: string
+        - in: query
+          name: availability_zone
+          type: string
+        - in: query
+          name: changes-since
+          type: string
+        - in: query
+          name: created_at
+          type: string
+        - in: query
+          name: description
+          type: string
+        - in: query
+          name: flavor
+          type: string
+        - in: query
+          name: image
+          type: string
+        - in: query
+          name: key_name
+          type: string
+        - in: query
+          name: name
+          type: string
+        - in: query
+          name: status
+          type: string
+        - in: query
+          name: uuid
+          type: string
+        - in: query
+          name: user_id
+          type: string
         responses:
           "200":
             description: OK
