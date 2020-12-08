@@ -1,7 +1,7 @@
 ---
 swagger: "2.0"
 info:
-  version: "1.6"
+  version: "1.20"
   x-version-header: "OpenStack-API-Version"
   x-version-header-value-template: "placement %s"
   title: "Placement API"
@@ -38,13 +38,16 @@ paths:
       description: "Creates a resource provider."
       parameters:
         - in: body
-          name: body
+          name: resource_provider
           required: true
           schema:
             $ref: "#/definitions/ResourceProvider"
       responses:
-        "201":
+        "200":
           description: OK
+          schema:
+            type: object
+
   /resource_providers/{uuid}:
     get:
       operationId: "get_resource_provider"
