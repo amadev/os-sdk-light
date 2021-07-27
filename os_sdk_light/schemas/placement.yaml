@@ -125,6 +125,26 @@ paths:
               inventories:
                 type: object
 
+  /resource_providers/{uuid}/allocations:
+    get:
+      operationId: "get_allocations"
+      description: "List resource provider allocations."
+      parameters:
+        - in: path
+          name: uuid
+          required: true
+          type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+            required:
+              - allocations
+            properties:
+              allocations:
+                type: object
+
   /resource_providers/{uuid}/usages:
     get:
       operationId: "get_usages"

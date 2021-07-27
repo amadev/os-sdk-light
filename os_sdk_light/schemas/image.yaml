@@ -13,6 +13,9 @@ paths:
       description: "List images."
       parameters:
         - in: query
+          name: id
+          type: string
+        - in: query
           name: name
           type: string
         - in: query
