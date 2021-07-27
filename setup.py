@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 setup(
     name="os-sdk-light",
-    version="0.2.5",
+    version="0.2.6",
     packages=find_packages(),
     # metadata for upload to PyPI
     author="Andrey Volkov",
